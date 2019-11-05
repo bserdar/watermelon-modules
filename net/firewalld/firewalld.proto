@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package firewalld;
+
+option go_package="github.com/cloudprivacylabs/watermelon-modules/net/firewalld";
+
+import "module.proto";
+
+
+message RichRuleAddress {
+  string address=1;
+  bool invert=2;
+}
+
+message RichRulePort {
+  string port=1;
+  string protocol=2;
+}
+
+message RichRule {
+  string family=1;
+  RichRuleAddress source=2;
+  RichRuleAddress dest=3;
+  RichRulePort port=4;
+  RichRulePort sourcePort=5;
+  RichRulePort forwardPort=6;
+  string protocol=7;
+  string serviceName=8;
+  string action=9;
+}
+
+message AddRuleRequest {
+  string hostId=2;
+  string zone=3;
+  bool permanent=4;
+
+  oneof rule {
+    RichRule rich=5;
+  }
+}
+
+message ReloadRequest {
+  string hostId=2;
+}
+
+service Firewalld {
+  rpc AddRule(AddRuleRequest) returns(pb.Response);
+  rpc Reload(ReloadRequest) returns(pb.Response);
+}

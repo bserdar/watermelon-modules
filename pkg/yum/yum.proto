@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package yum;
+
+import "module.proto";
+
+option go_package = "github.com/cloudprivacylabs/watermelon-modules/pkg/yum";
+
+message PackageParams {
+  string hostId=2;
+  repeated string pkgs=3;
+  string pkg=4;
+}
+
+message EnsureParams {
+  string hostId=2;
+  repeated string pkgs=3;
+  string pkg=4;
+	string version=5;
+}
+
+
+message GetVerParams {
+  string hostId=2;
+  repeated string pkgs=3;
+  string pkg=4;
+}
+
+message PkgVersion {
+  string pkg=1;
+  string version=2;
+}
+
+message GetVerResult {
+  repeated PkgVersion versions=1;
+}
+
+service Yum {
+  rpc Install(PackageParams) returns(pb.Response);
+  rpc Update(PackageParams) returns(pb.Response);
+  rpc Remove(PackageParams) returns(pb.Response);
+  rpc Ensure(EnsureParams) returns(pb.Response);
+  rpc GetVer(GetVerParams) returns(GetVerResult);
+}
